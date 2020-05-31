@@ -1,0 +1,33 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,600,400italic);
+
+form {
+  width: 30%;
+  text-align: center;
+  display: inline-block;
+}
+
+.formdiv {
+  text-align: center;
+}
+
+textarea {
+  resize: none;
+  min-height: 20rem !important;
+}
+
+.btn {
+  margin: 1rem;
+}
+
+h2 {
+  margin-top: 1rem;
+  text-align: center;
+}
+
+#request-table {
+  text-align: center;
+}
+
+.requests {
+  display: initial;
+}

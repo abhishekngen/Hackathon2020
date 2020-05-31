@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Elderoo!</title>
+	<script src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous" type="text/javascript"></script>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
+</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+<script type="text/javascript">
+
+</script>
+</head>
+<body> 
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="index.html">Elderoo</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="elderooform.html">Login/Sign Up<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="currreq.html">See requests</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="elderoo.html">Create Requests</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="volunteroo.html">Take on requests</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <br>
+<div id="holder" text-align:center>
+<h2> View and Accept Ongoing Requests made in your Area </h2>
+</div>
+<br><br>
+<div id="formdiv">
+<button class="btn btn-dark" onclick="getRequest()">Get Requests!</button>
+</div>
+<table id="table0" class="table"></table>
+
+<br>
+<br>
+<button onclick="logOut()" class = "btn btn-danger">Log Out</button>
+</div>
+<script type = "text/javascript">
+  function getRequest(){
+    console.log("ye")
+    var url = "https://03035fd51b67.ngrok.io/request/getall"; // the script where it handle the form input.
+    var i = 0;
+    var tr;
+        $.ajax({
+               type: "POST",
+               url: url,
+               data: {token: $.cookie('auth')}, // serializes the form's elements.
+               success: function(data)
+               {
+                  console.log(data)
+                  document.getElementById("table0").innerHTML = "";
+                  for (const request of data){
+                  console.log(request.helperID);
+                  if(!request.helperID){
+                    var btn = document.createElement("BUTTON")
+                    btn.innerHTML = "Accept: " + '"' +request.requestBody + '""'
+                    btn.onclick = function(){
+                      var btnclick = btn;
+                      var reqBody = request.requestBody;
+                      var url = "https://03035fd51b67.ngrok.io/request/accept";
+                      btnclick.innerHTML = '"' + '"' + reqBody + " Accepted"
+                      $.ajax({
+                          type: "POST",
+                          url: url,
+                          data: {requestId: request.id, token: $.cookie('auth')}, // serializes the form's elements.
+                          success: function(data)
+                          {
+                            console.log(data)
+                          }
+                      });
+                    }
+                    var td = document.createElement('td').appendChild(btn)
+
+                    if(!(i%5)){
+                        tr = document.createElement('tr');
+                        document.getElementById('table0').appendChild(tr);
+                    }
+                    tr.appendChild(td)
+                    i+=1
+               }
+              }
+             }
+             });
+
+        return false; 
+ } 
+
+
+function logOut(){
+  $.cookie('auth', null);
+  window.location.href = "elderooform.html"
+}
+</script>
+</body>
+</html>

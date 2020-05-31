@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elderoo</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+    integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous" type="text/javascript"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script type = "text/javascript">
+    window.onload = volunteerCheck;
+  
+  function volunteerCheck() {
+    //console.log($.cookie('auth'))
+    var url = "https://03035fd51b67.ngrok.io/request/getcurrent";
+    var table = document.createElement('table');
+    table.classList.add("requests");
+    table.classList.add("table");
+    var tbody = document.createElement('tbody');
+     $.ajax({
+           type: "POST",
+           url: url,
+           data: {token: $.cookie('auth')}, // serializes the form's elements.
+           success: function(data)
+           {
+            for (const request of data){
+              console.log(request);
+              
+              var tr = document.createElement('tr')
+              
+              var td1 = document.createElement('td');
+              var td2 = document.createElement('td');
+              var td3 = document.createElement('td');
+
+              var body = document.createTextNode(request.requestBody);
+              var status;
+              if (request.fulfilled) {
+                status = document.createTextNode("Completed");
+              } else{
+                status = document.createTextNode(request.helperID?"Accepted":"Not Accepted");
+              }
+              td1.appendChild(body);
+              td2.appendChild(status);
+              tr.appendChild(td1);
+              tr.appendChild(td2);
+              if(!request.fulfilled && request.helperID){
+                console.log("added");
+                
+                var fulfillBtn = document.createElement('button');
+                fulfillBtn.classList.add('btn');
+                fulfillBtn.classList.add('btn-primary');
+                fulfillBtn.textContent = "Completed?";
+                fulfillBtn.onclick = () => {
+                  $.ajax({
+                    type: "POST",
+                    url: "https://03035fd51b67.ngrok.io/request/fulfill",
+                    data: {requestId: request.id},
+                    success: function() {
+                      location.reload();
+                    }
+                  });
+                }
+                td3.appendChild(fulfillBtn);
+                tr.appendChild(td3);
+              }
+              tbody.appendChild(tr);
+            }
+            table.appendChild(tbody);
+            document.getElementById("request-table").appendChild(table);
+          }
+         }
+         );
+  }
+    </script>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="index.html">Elderoo</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="elderooform.html">Login/Sign Up<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="currreq.html">See requests</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="elderoo.html">Create Requests</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="volunteroo.html">Take on requests</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div style="text-align: center;">
+    <button style = "text-align: center" class="btn btn-success" onclick="location.reload()">Refresh Requests List</button>
+      </div>
+    <div id="request-table"></div>
+</body>
+</html>

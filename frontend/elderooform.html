@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Elderoo!</title>
+	 <link rel = "stylesheet"
+   type = "text/css"
+   href = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" />
+    <!-- https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css -->
+	<script src="https://code.jquery.com/jquery-3.5.1.js"
+  integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+  crossorigin="anonymous" type="text/javascript"> 
+</script>
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js">
+</script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js%22%3E"></script> -->
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		<a class="navbar-brand" href="#">Elderoo</a>
+	  </nav>
+<div id="holder" text-align:center>
+<h2>Allowing volunteers to support vulnerable residents in society.</h2>
+</div>
+<br>
+<h2>Log-in:</h2>
+<div class = "formdiv">
+<form id = "login">
+		<label for = "username">Username:</label>
+		<div>
+		<input type = "text" name = "username" id = "username">
+		</div>
+		<label for = "password">Password</label>
+		<div>
+		<input type = "text" name = "pass" id = "pass">
+		</div>
+    	<input id = "submitbtn" type="submit" value="Submit" class = "btn btn-primary">
+    	<!-- <input type="reset" value="Reset" class="btn btn-success"> -->
+</form>
+</div>
+<br>
+
+<div class="formdiv">
+	<h2>Or Sign up!</h2>
+	<form id = "loginreg" class = "form-group">
+		
+			<label for = "fullname">Full Name:</label>
+			<div>
+			<input type = "text" name = "fullname" id = "fullname" class = "form-control" size = "40">
+			</div>
+			<br>
+			<label for = "postcode">Postcode</label>
+			<div>
+			<input type = "text" name = "postcode" id = "postcode" class="form-control">
+			</div>
+			<br>
+			
+			<label for = "streetname">Street Name</label>
+			<div>
+			<input type = "text" name = "streetname" id = "streetname" class="form-control">
+			</div>
+			<br>
+			<label for = "housenumber">House Number:</label>
+			<div>
+			<input type = "number" name = "housenumber" id = "housenumber" class="form-control">
+			</div>
+			<br>
+			<label for = "phonenumber">Mobile Phone:</label>
+			<div>
+			<input type = "number" name = "phonenumber" id = "phonenumber" class="form-control">
+			</div>
+			<br>
+			<label for = "username">Username:</label>
+			<div>
+			<input type = "text" name = "username" id = "username" class="form-control">
+			</div>
+			<br>
+			<label for = "password">Password:</label>
+			<div>
+			<input type = "text" name = "pass" id = "pass" class="form-control">
+			</div>
+			<br>
+			<label for = "elderly">Are you an elderly/vulnerable person who would like to request for support?</label>
+			<input type = "checkbox" name = "elderly" id = "elderly">
+			<div>
+			<input id = "submitbtnreg" type="submit" value="Submit" class="btn btn-primary">
+			<input type="reset" value="Reset" class = "btn btn-success"">
+			</div>
+	</form>
+	</div>
+	<br>
+			</div>
+			<br>
+			<label for = "username">Username:</label>
+			<div>
+			<input type = "text" name = "username" id = "username" class="form-control">
+			</div>
+			<br>
+			<label for = "password">Password:</label>
+			<div>
+			<input type = "text" name = "pass" id = "pass" class="form-control">
+			</div>
+			<br>
+			<label for = "elderly">Are you an elderly/vulnerable person who would like to request for support?</label>
+			<input type = "checkbox" name = "elderly" id = "elderly">
+			<div>
+			<input id = "submitbtnreg" type="submit" value="Submit" class="btn btn-primary">
+			<input type="reset" value="Reset" class = "btn btn-success"">
+			</div>
+	</form>
+	</div>
+	<br>
+<script type="text/javascript">
+	$("#submitbtnreg").click(function() {
+
+    var url = "https://03035fd51b67.ngrok.io/user/register"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#loginreg").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+           		if(data.message){
+           			alert(data.message)
+           		}
+           		else{
+           			// document.cookie = "token=" + data.token;
+           			console.log(data.token)
+           			$.cookie("auth", data.token, { path: '/' });
+           			alert( $.cookie("auth"));
+                	//window.location.href = "/elderoo.html"
+           		}
+           }
+         });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+	$("#submitbtn").click(function() {
+
+    var url = "https://03035fd51b67.ngrok.io/user/login"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: $("#login").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+
+           		if(data.message){
+           			alert(data.message)
+           		}
+           		else{
+           			// document.cookie = "token=" + data.token;
+           			console.log(data.token)
+           			$.cookie("auth", data.token, { path: '/' });
+           			//alert( $.cookie("auth"));
+
+           			if(data.type === "elderly"){
+           				window.location.href = "elderoo.html"
+           			}
+                else{
+                  window.location.href = "volunteroo.html"
+                }
+                //window.location.href = "/elderooform.html"
+           		}
+           }
+         });
+
+    return false; // avoid to execute the actual submit of the form.
+});
+</script>
+</body>
+</html>
